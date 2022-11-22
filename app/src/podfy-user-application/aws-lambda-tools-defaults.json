@@ -12,5 +12,5 @@
   "function-runtime": "dotnet6",
   "function-memory-size": 256,
   "function-timeout": 30,
-  "function-handler": "podfy-user-application::podfy_user_application.Function::SingInHandlerAsync"
+  "function-handler": "podfy-user-application::podfy_user_application.Function::SingInFunctionHandlerAsync"
 } 

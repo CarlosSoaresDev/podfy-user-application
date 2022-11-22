@@ -1,11 +1,12 @@
-﻿using Amazon.Lambda.Core;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using podfy_user_application.Context;
 using podfy_user_application.Repository;
 using podfy_user_application.Service;
+using System.Diagnostics.CodeAnalysis;
 
 namespace podfy_user_application.IoC;
 
+[ExcludeFromCodeCoverage]
 internal static class ConfigureServices
 {
     public static void AddServices(this IServiceCollection serviceCollection)

@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using podfy_user_application.Entity;
+using System.Diagnostics.CodeAnalysis;
 
 namespace podfy_user_application.Profiles;
 
+[ExcludeFromCodeCoverage]
 public class UserProfile : Profile
 {
     public UserProfile()

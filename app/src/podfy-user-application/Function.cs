@@ -17,10 +17,10 @@ public class Function: HttpHelpers
 
     public Function()
     {
-        var serviceCollection = new ServiceCollection();
-        serviceCollection.AddServices();
-        var serviceProvider = serviceCollection.BuildServiceProvider();
-        userService = serviceProvider.GetService<IUserService>();
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddServices();
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            userService = serviceProvider.GetService<IUserService>();   
     }
 
     public async Task<APIGatewayProxyResponse> SingInFunctionHandlerAsync(APIGatewayProxyRequest request, ILambdaContext context)

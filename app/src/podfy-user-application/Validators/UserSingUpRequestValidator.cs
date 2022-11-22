@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
 using podfy_user_application.Model;
+using System.Diagnostics.CodeAnalysis;
 
 namespace podfy_user_application.Validators;
 
+[ExcludeFromCodeCoverage]
 public class UserSingUpRequestValidator : AbstractValidator<UserSingUpRequest>
 {
     public UserSingUpRequestValidator()
