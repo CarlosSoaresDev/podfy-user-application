@@ -1,0 +1,73 @@
+AWSTemplateFormatVersion : 2010-09-09
+Description: Get up services to user application serverless [ ApiGateway, lambda]
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  ApplicationName:
+    Type: String
+  SQSName:
+    Type: String
+  AccessKey:
+    Type: String
+  SecretKey:
+    Type: String
+
+Globals:
+  Function:
+    Timeout: 15
+    MemorySize: 128
+    Runtime: dotnet6
+    CodeUri: s3://lambda-aplication-repository/user-application/release.zip
+    Environment:
+        Variables:
+          ACCESS_KEY: !Ref AccessKey
+          SECRET_KEY: !Ref SecretKey
+          SQS_NAME: !Ref SQSName   
+
+Resources:
+
+  ApiGatewayApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub '${ApplicationName}-api'
+      StageName: Prod
+      CorsConfiguration:
+        AllowMethods:
+          - POST
+        AllowHeaders:
+          - "*"   
+        AllowOrigins: 
+          - "*"      
+
+  LambdaSingInFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ApplicationName}-sing-in'
+      Description: This lambda execulte an SingIn of the user
+      Handler: podfy-user-application::podfy_user_application.Function::SingInFunctionHandlerAsync
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: /SingIn
+            Method: POST
+
+  LambdaSingUpFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ApplicationName}-sing-up'
+      Description: This lambda execulte an SingUn of the user
+      Handler: podfy-user-application::podfy_user_application.Function::SingUpFunctionHandlerAsync
+      Events:
+        ProxyApiRoot:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGatewayApi
+            Path: /SingUp
+            Method: POST
+
+Outputs:
+  ApiUrl:
+    Description: URL of your API endpoint
+    Value: !Sub 'https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
