@@ -31,6 +31,12 @@ Resources:
     Properties:
       Name: !Sub '${ApplicationName}-api'
       StageName: Prod
+      Cors:
+        AllowMethods: "'POST'"
+        AllowHeaders: "'*'"
+        AllowOrigin: "'*'"
+        MaxAge: "'600'"
+        AllowCredentials: false
 
   LambdaSingInFunction:
     Type: AWS::Serverless::Function
