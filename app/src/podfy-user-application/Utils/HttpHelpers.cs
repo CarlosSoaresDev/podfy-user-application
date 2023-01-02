@@ -30,7 +30,7 @@ public class HttpHelpers
         {
             StatusCode = (int)httpStatusCode,
             Body = JsonSerializer.Serialize(body),
-            Headers = new Dictionary<string, string> { 
+            Headers = new Dictionary<string, string> {
                 { "Content-Type", "application/json" },
                 { "Access-Control-Allow-Origin", "*"}
             }

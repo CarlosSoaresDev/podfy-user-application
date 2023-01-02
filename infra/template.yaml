@@ -11,6 +11,12 @@ Parameters:
     Type: String
   SecretKey:
     Type: String
+  VPC:
+    Type: String
+  PrivateSubnetOne:
+    Type: String
+  PrivateSubnetTwo:
+    Type: String
 
 Globals:
   Function:
@@ -18,6 +24,12 @@ Globals:
     MemorySize: 128
     Runtime: dotnet6
     CodeUri: s3://lambda-aplication-repository/user-application/release.zip
+    VpcConfig:
+      SecurityGroupIds:
+        - !Ref ServerlessSecurityGroup
+      SubnetIds:
+        - !Ref PrivateSubnetOne
+        - !Ref PrivateSubnetTwo
     Environment:
         Variables:
           ACCESS_KEY: !Ref AccessKey
@@ -26,6 +38,13 @@ Globals:
 
 Resources:
 
+  ServerlessSecurityGroup:
+  Type: AWS::EC2::SecurityGroup
+  Properties:
+    GroupDescription: SecurityGroup for Serverless Functions
+    VpcId:
+      !Ref VPC
+  
   ApiGatewayApi:
     Type: AWS::Serverless::Api
     Properties:
