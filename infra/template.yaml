@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion : 2010-09-09
-Description: Get up services to user application serverless [ ApiGateway, lambda]
+Description: Up services to user application serverless [SG, ApiGateway, lambda]
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
@@ -37,12 +37,20 @@ Globals:
           SQS_NAME: !Ref SQSName   
 
 Resources:
+  
+# -------------------------------------------------------------------------
+# Deploy SG EC2
+# -------------------------------------------------------------------------
 
   ServerlessSecurityGroup:
    Type: AWS::EC2::SecurityGroup
    Properties:
      GroupDescription: SecurityGroup for Serverless Functions
      VpcId: !Ref VPC
+
+# -------------------------------------------------------------------------
+# Deploy API Gateway serverless
+# -------------------------------------------------------------------------
   
   ApiGatewayApi:
     Type: AWS::Serverless::Api
@@ -55,6 +63,10 @@ Resources:
         AllowOrigin: "'*'"
         MaxAge: "'600'"
         AllowCredentials: false
+
+# -------------------------------------------------------------------------
+# Deploy Lambda serverless function
+# -------------------------------------------------------------------------
 
   LambdaSingInFunction:
     Type: AWS::Serverless::Function
