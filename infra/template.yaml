@@ -39,11 +39,10 @@ Globals:
 Resources:
 
   ServerlessSecurityGroup:
-  Type: AWS::EC2::SecurityGroup
-  Properties:
-    GroupDescription: SecurityGroup for Serverless Functions
-    VpcId:
-      !Ref VPC
+   Type: AWS::EC2::SecurityGroup
+   Properties:
+     GroupDescription: SecurityGroup for Serverless Functions
+     VpcId: !Ref VPC
   
   ApiGatewayApi:
     Type: AWS::Serverless::Api
