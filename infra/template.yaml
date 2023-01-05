@@ -11,6 +11,8 @@ Parameters:
     Type: String
   SecretKey:
     Type: String
+  UserSecretKey:
+    Type: String
   VPC:
     Type: String
   PrivateSubnetOne:
@@ -23,18 +25,19 @@ Globals:
     Timeout: 15
     MemorySize: 128
     Runtime: dotnet6
-    CodeUri: s3://lambda-aplication-repository/user-application/release.zip
-    VpcConfig:
-      SecurityGroupIds:
-        - !Ref ServerlessSecurityGroup
-      SubnetIds:
-        - !Ref PrivateSubnetOne
-        - !Ref PrivateSubnetTwo
+    CodeUri: s3://lambda-aplication-repository/user-application/release.zip    
     Environment:
         Variables:
+          USER_SECRET_KEY: !Ref UserSecretKey
           ACCESS_KEY: !Ref AccessKey
           SECRET_KEY: !Ref SecretKey
           SQS_NAME: !Ref SQSName   
+    # VpcConfig:
+    #   SecurityGroupIds:
+    #     - !Ref ServerlessSecurityGroup
+    #   SubnetIds:
+    #     - !Ref PrivateSubnetOne
+    #     - !Ref PrivateSubnetTwo
 
 Resources:
   
@@ -42,11 +45,11 @@ Resources:
 # Deploy SG EC2
 # -------------------------------------------------------------------------
 
-  ServerlessSecurityGroup:
-   Type: AWS::EC2::SecurityGroup
-   Properties:
-     GroupDescription: SecurityGroup for Serverless Functions
-     VpcId: !Ref VPC
+  # ServerlessSecurityGroup:
+  #  Type: AWS::EC2::SecurityGroup
+  #  Properties:
+  #    GroupDescription: SecurityGroup for Serverless Functions
+  #    VpcId: !Ref VPC
 
 # -------------------------------------------------------------------------
 # Deploy API Gateway serverless
@@ -95,6 +98,13 @@ Resources:
             RestApiId: !Ref ApiGatewayApi
             Path: /SingUp
             Method: POST
+
+  LambdaValidateTokenFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub '${ApplicationName}-validate-token'
+      Description: This lambda verify if token is valid
+      Handler: podfy-user-application::podfy_user_application.Function::ValidateTokenHandlerAsync
 
 Outputs:
   ApiUrl:

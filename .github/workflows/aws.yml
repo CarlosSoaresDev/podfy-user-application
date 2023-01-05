@@ -83,6 +83,6 @@ jobs:
            aws cloudformation deploy \
            --template-file ./infra/template.yaml \
            --capabilities CAPABILITY_NAMED_IAM \
-           --parameter-overrides  ${parameters[@]} ApplicationName=${{env.service-name}} AccessKey=${{ secrets.AWS_ACCESS_KEY_ID }} SecretKey=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+           --parameter-overrides  ${parameters[@]} ApplicationName=${{env.service-name}} AccessKey=${{ secrets.AWS_ACCESS_KEY_ID }} SecretKey=${{ secrets.AWS_SECRET_ACCESS_KEY }} UserSecretKey=${{ secrets.USER_SECRET_KEY }} \
            --stack-name ${{env.service-name}}  
          

@@ -9,6 +9,8 @@ namespace podfy_user_application.Utils
 {
     public static class JwtProviderExtension
     {
+        private static string secretKey = Environment.GetEnvironmentVariable("USER_SECRET_KEY");
+
         public static UserTokenResponse GenerateJwtToken(this User user)
         {
             try
@@ -22,8 +24,6 @@ namespace podfy_user_application.Utils
                 new Claim("email", user.Email),
                 new Claim("createdAt", user.CreatedAt.ToString("dd/MM/yyyy")),
                 };
-
-                var secretKey = "asdv234234^&%&^%&^hjsdfb2%%%"; //Environment.GetEnvironmentVariable("PasswordSecretKey");
 
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(secretKey);
@@ -48,5 +48,26 @@ namespace podfy_user_application.Utils
                 throw ex;
             }
         }
+
+        public static ClaimsPrincipal ValidateToken(this string authToken)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var validationParams = new TokenValidationParameters()
+            {
+                ValidateLifetime = true,
+                ValidateAudience = false,
+                ValidateIssuer = false,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+            };
+            try
+            {
+                return tokenHandler.ValidateToken(authToken, validationParams, out SecurityToken securityToken);
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
     }
 }
