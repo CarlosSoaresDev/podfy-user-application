@@ -105,8 +105,37 @@ Resources:
       FunctionName: !Sub '${ApplicationName}-validate-token'
       Description: This lambda verify if token is valid
       Handler: podfy-user-application::podfy_user_application.Function::ValidateTokenHandlerAsync
+      Role: !GetAtt LambdaValidateTokenRole.Arn
 
+  LambdaValidateTokenRole:
+    Type: AWS::IAM::Role
+    Description: Lambda Function Role that will access to Core API.
+    Properties:
+      RoleName: LambdaValidateTokenRole
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - apigateway.amazonaws.com
+      Policies:
+        - PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource: "*"
+          PolicyName: LambdaValidateTokenPolicy
+  
 Outputs:
   ApiUrl:
     Description: URL of your API endpoint
     Value: !Sub 'https://${ApiGatewayApi}.execute-api.${AWS::Region}.amazonaws.com/Prod'
+  LambdaValidateTokenRole:
+    Description: Role of the lambda
+    Value: !GetAtt LambdaValidateTokenRole.Arn
